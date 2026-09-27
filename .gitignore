@@ -1,0 +1,5 @@
+.terraform
+.terraform.lock.hcl
+terraform.tfstate*
+devops-bootcamp-key.pem
+temp.txt
