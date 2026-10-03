@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/mohsiuddinjagirdar/aws_eks_amazonclone.git'
+            }
+        }
+
+        stage('Terraform init') {
+            steps {
+                dir('terraform_code/eks_code') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('Terraform plan') {
+            steps {
+                dir('terraform_code/eks_code') {
+                    withCredentials([
+                        string(credentialsId: 'aws-accesskey', variable: 'AWS_ACCESS_KEY_ID'),
+                        string(credentialsId: 'aws-secretkey', variable: 'AWS_SECRET_ACCESS_KEY')
+                    ]) {
+                        sh 'terraform plan'
+                    }
+                }
+            }
+        }
+    }
+}

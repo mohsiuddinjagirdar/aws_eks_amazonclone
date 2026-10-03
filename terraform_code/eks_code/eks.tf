@@ -1,11 +1,13 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.15.1"
+  version = "21.26.0"
 
-  cluster_name                   = local.name
-  cluster_endpoint_public_access = true
+  name = local.name
+  kubernetes_version = "1.33"
+  
+  endpoint_public_access = true
 
-  cluster_addons = {
+  addons = {
     coredns = {
       most_recent = true
     }
