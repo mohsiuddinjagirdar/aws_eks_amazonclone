@@ -28,5 +28,25 @@ pipeline {
                 }
             }
         }
+                stage('Approve plan') {
+            steps {
+                dir('terraform_code/eks_code') {
+                   input message: 'Approve deployment?', ok: 'Deploy', submitter: 'admin_user'
+                }
+            }
+        }
+        stage('Terraform Apply'){
+            steps{
+                dir(path: 'terraform_code/eks_code'){
+                    withCredentials([
+                        string(credentialsId: 'aws-accesskey', variable: 'AWS_ACCESS_KEY_ID'),
+                        string(credentialsId: 'aws-secretkey', variable: 'AWS_SECRET_ACCESS_KEY')
+                    ])
+                    {
+                       sh 'terraform apply --auto-approve'
+                    }
+                }
+            }
+        }
     }
 }
